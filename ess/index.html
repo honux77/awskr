@@ -6,15 +6,15 @@
   <title>AWS Course Assistance Page</title>
 
   <!-- CSS  -->
-  <link href="css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="../css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <!-- favicon -->
-  <link rel="shortcut icon" href="images/favicon/favicon.ico">
+  <link rel="shortcut icon" href="../images/favicon/favicon.ico">
 </head>
 <body>
   <nav class="grey darken-4" role="navigation">
     <div class="nav-wrapper container">
-      <a href="http://aws.watple.com" target="_blank">
-      <img src="images/aws_300.jpg" height="50px"></a>
+      <a href="http://aws.watple.com/ess">
+      <img src="../images/aws_300.jpg" height="50px"></a>
       <ul class="right hide-on-med-and-down">
         <li><a href="http://evantage.gilmoreglobal.com/#/books" target="_blank">ebook</a></li>
         <li><a href="https://aws.qwiklab.com" target="_blank">qwiklab</a></li>
@@ -35,34 +35,48 @@
   ///////////////////////////////////////////-->
 
   <div class="container">
-    <div class="row">
-      <div class="col s6">
-      <div class="card blue-grey darken-1">
-        <div class="card-content white-text">
-          <span class="card-title"> <a href="ess/index.html">AWS Essentials</a></span>
-          <p>본 교육은 아마존 공식 교육 커리큘럼으로 아마존 소속 강사가 직접 과정을 진행합니다. 1일간 진행되는 본 교육 과정은 AWS 서비스에 대한 기본 지식을 얻고자하는 분들을 위해 개설된 과정으로서, AWS의 핵심 서비스에 대한 내용을 포함합니다. </p>
-          </div>
-        </div>
+    <div class="section">
+
+      <div id="introduction" class="section scrollspy">
+        <h2 class="amber-text text-accent-3">AWS Essential</h2>
+        <h2>URL: <b>aws.watple.com/ess</b></h2>
+        <h4>WiFi: ETEDU / etnews114 </h4>
+        <h5>정호영(Technical Trainer), hoyoungj@amazon.com</h4>
       </div>
 
-      <div class="col s6">
-      <div class="card blue-grey darken-1">
-        <div class="card-content white-text">
-      <span class="card-title"> <a href="arc/index.html">Arcitecting on AWS</a></span>
-        <p>본 교육 과정은 AWS 기반으로 클라우드의 확장성과 탄력성을 최대한 활용하여 애플리케이션의 아키텍처를 설계하는 방법을 습득하고자 하는 분을 위해 개설된 과정입니다. 애플리케이션, 배치 프로세싱, 사내 IT 애플리케이션과 같은 공통 솔루션에 대한 아키텍처 패턴을 실습 및 그룹 활동을 포함해 교육합니다. </p>
-          </div>
-        </div>
-      </div>
-
+      <div id="preparation" class="section scrollspy">
+       <h3 class="amber-text text-accent-3">교육 준비</h3>
+       <ol>
+        <li>교육등록한 메일주소로 qwikLAB 실습계정 생성 <a href="http://wiki.watple.com/index.php/Qwiklab">자세히 보기</a></li>
+        <li>같은 이메일 주소로 eBook 계정 생성 <a href="http://www.gilmore.ca/eVantageRegistration/" target="_blank">gilmore.ca</a></li> 
+        <li>eBook뷰어 다운로드 <a href="http://www.vitalsource.com/download" target="_blank">바로가기</a></li>
+        <li>뷰어에 길모어 계정으로 로그인 및 메일로 받은 상환코드를 뷰어를 통해 활성화</li> 
+      </ol>
     </div>
-  </div>
-  <div class="section">  </div>
+
+      <div id="others" class="section scrollspy">
+        <h3 class="amber-text text-accent-3">기타 참고 사항</h3>
+        <ul>
+          <li>교육평가사이트: <a href="http://goo.gl/forms/OcNogDNSJh" target="_blank">바로가기</a> </li>
+            <li>추가 강의 노트: <a href="../notes/index.html" target="_blank">바로가기</a> </li>
+          <li>메일주소확인: <a href="https://docs.google.com/spreadsheets/d/1gYTSwgieHm-Sy4hs-XISQLOd4LWfFetnDPlONamjeZc/edit?usp=sharing" target="_blank">바로가기</a>
+          <li>ebook은 웹 브라우저로도 볼 수 있습니다.</li>  
+          <li>user-data는 ebook이 아닌 qwiklab의 스크립트를 복사해서 사용합니다.</li>  
+          <li>실습용 웹 브라우저는 크롬 또는 파이어폭스를 추천합니다 </li>
+        </ul> 
+      </div>
+    <!--
+              <li>추가 강의 노트: <a href="../notes/index.html" target="_blank">바로가기</a> </li>
+
+    -->
 
   <!-- //////////////////////////////////////
   //       END  MAIN CONTENTS              //
   ///////////////////////////////////////////-->
 
-
+      </div>
+    </div>
+  </div>
 
     <footer class="page-footer black">
       <div class="container">
@@ -94,8 +108,8 @@
 
       <!--  Scripts-->
       <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-      <script src="js/materialize.js"></script>
-      <script src="js/init.js"></script>
+      <script src="../js/materialize.js"></script>
+      <script src="../js/init.js"></script>
 
     </body>
     </html>
