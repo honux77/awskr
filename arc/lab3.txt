@@ -1,0 +1,87 @@
+Architecting on AWS: Creating a Batch Processing Cluster
+
+This file contains the UserData content that you need to complete the Creating a Batch Processing Cluster lab.
+
+To use this file:
+
+1. Locate the section you need. Each section in this file matches a section in the lab instructions.
+
+2. Copy the data and follow the rest of the lab instructions.
+
+==================================================================================================================
+
+Launch an EC2 Instance
+
+==================================================================================================================
+
+
+#!/bin/bash
+
+# Install ImageMagick, a Python library, and create a directory
+yum install -y ImageMagick
+easy_install argparse
+mkdir /home/ec2-user/jobs
+
+# Download and install the batch processing script
+# The following command must be on a single line:
+sudo wget -O /home/ec2-user/image_processor.py https://s3-ap-northeast-1.amazonaws.com/awskr/arc/image_process.py
+
+
+==================================================================================================================
+
+Launch Worker Nodes
+
+==================================================================================================================
+
+
+#!/bin/sh
+
+# Setting the region for the script
+REGION=`curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone/ | sed -e 's/.$//'`
+echo $REGION > /home/ec2-user/region
+
+# REPLACE PARAMETERS WITH YOUR QUEUE NAMES
+INPUT_QUEUE=<YOUR_INPUT_QUEUE>
+OUTPUT_QUEUE=<YOUR_OUTPUT_QUEUE>
+S3_BUCKET=<YOUR_S3_BUCKET>
+
+# Launch two processes to do work
+/usr/bin/python /home/ec2-user/image_processor.py --input-queue $INPUT_QUEUE --output-queue $OUTPUT_QUEUE --s3-output-bucket $S3_BUCKET --region $REGION &
+/usr/bin/python /home/ec2-user/image_processor.py --input-queue $INPUT_QUEUE --output-queue $OUTPUT_QUEUE --s3-output-bucket $S3_BUCKET --region $REGION &
+
+
+==================================================================================================================
+
+Dispatch Work and View Results
+
+==================================================================================================================
+
+https://us-east-1-aws-training.s3.amazonaws.com/arch-static-assets/static/20120728-DSC01265-L.jpg
+https://us-east-1-aws-training.s3.amazonaws.com/arch-static-assets/static/20120728-DSC01267-L.jpg
+https://us-east-1-aws-training.s3.amazonaws.com/arch-static-assets/static/20120728-DSC01292-L.jpg
+https://us-east-1-aws-training.s3.amazonaws.com/arch-static-assets/static/20120728-DSC01315-L.jpg
+https://us-east-1-aws-training.s3.amazonaws.com/arch-static-assets/static/20120728-DSC01337-L.jpg 
+
+
+
+==================================================================================================================
+
+Create a Launch Configuration
+
+==================================================================================================================
+
+#!/bin/sh
+
+# Setting the region for the script
+REGION=`curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone/ | sed -e 's/.$//'`
+echo $REGION > /home/ec2-user/region
+
+# REPLACE PARAMETERS WITH YOUR QUEUE NAMES
+INPUT_QUEUE=<YOUR_INPUT_QUEUE>
+OUTPUT_QUEUE=<YOUR_OUTPUT_QUEUE>
+S3_BUCKET=<YOUR_S3_BUCKET>
+
+# Launch two processes to do work
+/usr/bin/python /home/ec2-user/image_processor.py --input-queue $INPUT_QUEUE --output-queue $OUTPUT_QUEUE --s3-output-bucket $S3_BUCKET --region $REGION &
+/usr/bin/python /home/ec2-user/image_processor.py --input-queue $INPUT_QUEUE --output-queue $OUTPUT_QUEUE --s3-output-bucket $S3_BUCKET --region $REGION &
+	
