@@ -1,0 +1,15 @@
+{
+  "Id": "Policy1434441763990",
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt1434441762856",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:s3:::awskr-image/images/*",
+      "Principal": "*"
+    }
+  ]
+}
