@@ -1,0 +1,184 @@
+System Operations - Lab 7: Automating Deployments with CloudFormation - 2.1
+==================================================================================================================
+
+Using this command reference. 
+
+==================================================================================================================
+
+1. Locate the section you need. Each section in this file matches a section in the lab instructions.
+
+
+2. Replace items in angle brackets - [ ] - with appropriate values. For example, in this command you would replace the value - [JobFlowID] - (including the brackets) with the parameter indicated in the lab instructions: 
+
+   elastic-mapreduce --list [JobFlowID]. 
+
+   You can also use find and replace to change bracketed parameters in bulk.
+
+3. Do NOT enable the Word Wrap feature in Windows Notepad or the text editor you use to view this file.
+
+
+
+++++2. Edit CloudFormation Template++++
+
+
+==================================================================================================================
+2.1 Add User Data to NAT Instance
+==================================================================================================================
+
+2.1.1 Copy user data text from command reference file
+
+	"UserData" : {
+		"Fn::Base64" : {
+			"Fn::Join" : [
+				"\n",
+				[
+					"#!/bin/bash",
+					"yum -y update",
+					"echo 1 > /proc/sys/net/ipv4/ip_forward",
+					"echo 0 > /proc/sys/net/ipv4/conf/eth0/send_redirects",
+					"/sbin/iptables -t nat -A POSTROUTING -o eth0 -s 0.0.0.0/0 -j MASQUERADE",
+					"/sbin/iptables-save > /etc/sysconfig/iptables",
+					"mkdir -p /etc/sysctl.d/",
+					"cat <<EOF > /etc/sysctl.d/nat.conf",
+					"net.ipv4.ip_forward = 1",
+					"net.ipv4.conf.eth0.send_redirects = 0", 
+					"EOF \n"
+				]
+			]
+		}
+	},
+				
+		
+
+
+==================================================================================================================
+2.2 Change Availability Zones for Subnets
+==================================================================================================================
+
+
+2.2.1 Copy the first block of AvailabilityZone code
+
+    "AvailabilityZone" : {
+      "Fn::Select" : ["0", {
+        "Fn::GetAZs" : {
+          "Ref" : "AWS::Region"
+        }
+      }]
+    },
+		
+2.2.4 Copy the second block of AvailabilityZone code
+
+    "AvailabilityZone" : {
+      "Fn::Select" : ["1", {
+        "Fn::GetAZs" : {
+          "Ref" : "AWS::Region"
+        }
+      }]
+    },
+
+==================================================================================================================
+2.3 Add Parameters to Template
+==================================================================================================================
+
+2.3.1 Copy the Parameters block from the command reference file
+
+  "Parameters" : {
+    "BastionKeyName" : {
+      "Type" : "String",
+      "Description" : "The bastion server key."
+    }, 
+    "BastionSecurityCIDR" : {
+      "Type" : "String",
+      "Description" : "The CIDR block range for SSH."
+    }		
+  },
+
+2.3.4 Copy the new KeyName property from the command reference file
+
+        "KeyName" : {
+          "Ref" : "BastionKeyName"
+        },
+
+
+				
+				
+==================================================================================================================
+2.4 Add Mappings Block to Template
+==================================================================================================================
+
+2.4.1 Copy Mappings block from command reference file
+
+	"Mappings" : {
+		"AmazonLinuxAMI" : {
+		"us-east-1": {
+		        "AMI": "ami-b66ed3de"
+		      },
+		      "us-west-1": {
+		        "AMI": "ami-4b6f650e"
+		      },
+		      "us-west-2": {
+		        "AMI": "ami-b5a7ea85"
+		      },
+		      "eu-west-1": {
+		        "AMI": "ami-6e7bd919"
+		      },
+		      "sa-east-1": {
+		        "AMI": "ami-8737829a"
+		      },
+		      "ap-southeast-1": {
+		        "AMI": "ami-ac5c7afe"
+		      },
+		      "ap-southeast-2": {
+		        "AMI": "ami-63f79559"
+		      },
+		      "ap-northeast-1": {
+		        "AMI": "ami-4985b048"
+		      }
+		    }
+	},
+
+2.4.4 Copy the new ImageId property code from the command reference file
+
+        "ImageId" : {
+          "Fn::FindInMap" : [
+            "AmazonLinuxAMI", {
+              "Ref" : "AWS::Region"
+            },
+            "AMI"
+          ]
+        },
+
+
+		
+++++4. Challenge Solution: Debugging a CloudFormation Template++++
+		
+		
+==================================================================================================================
+4 Challenge Overview
+==================================================================================================================
+
+URL to download the debug template
+
+https://us-west-2-aws-training.s3.amazonaws.com/awsu-ilt/sys-ops/v2.1/lab-7-automating/static/CFDebug.template
+
+
+==================================================================================================================
+4.2 Fixing the Resource Error
+==================================================================================================================
+
+4.2.4 Replace the ImageId parameter
+
+		"ImageId" : {
+      "Fn::FindInMap" : [
+        "AmazonLinuxAMI", {
+          "Ref" : "AWS::Region"
+        },
+        "AMI"
+      ]
+    }
+		
+		
+© 2015 Amazon Web Services, Inc. or its affiliates. All rights reserved.
+
+
+

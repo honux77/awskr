@@ -1,0 +1,610 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+    "Parameters" : {
+    "BastionKeyName" : {
+      "Type" : "String",
+      "Description" : "The bastion server key."
+    }, 
+    "BastionSecurityCIDR" : {
+      "Type" : "String",
+      "Description" : "The CIDR block range for SSH."
+    }   
+  },
+  "Mappings" : {
+    "AmazonLinuxAMI" : {
+    "us-east-1": {
+            "AMI": "ami-b66ed3de"
+          },
+          "us-west-1": {
+            "AMI": "ami-4b6f650e"
+          },
+          "us-west-2": {
+            "AMI": "ami-b5a7ea85"
+          },
+          "eu-west-1": {
+            "AMI": "ami-6e7bd919"
+          },
+          "sa-east-1": {
+            "AMI": "ami-8737829a"
+          },
+          "ap-southeast-1": {
+            "AMI": "ami-ac5c7afe"
+          },
+          "ap-southeast-2": {
+            "AMI": "ami-63f79559"
+          },
+          "ap-northeast-1": {
+            "AMI": "ami-4985b048"
+          }
+        }
+  },
+  "Resources": {
+    "vpc4210b627": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": "10.1.0.0/16",
+        "InstanceTenancy": "default",
+        "EnableDnsSupport": "true",
+        "EnableDnsHostnames": "true",
+        "Tags": [
+          {
+            "Key": "CustomerName",
+            "Value": "aws"
+          },
+          {
+            "Key": "LabName",
+            "Value": "827"
+          },
+          {
+            "Key": "VPC",
+            "Value": "System Operations v2.1 Lab 7 - CloudFormation"
+          },
+          {
+            "Key": "ResourceGroup",
+            "Value": "CloudFormationResource"
+          },
+          {
+            "Key": "Name",
+            "Value": "Lab VPC"
+          }
+        ]
+      }
+    },
+    "subnet02e15275": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.1.50.0/24",
+        "AvailabilityZone" : {
+      "Fn::Select" : ["0", {
+        "Fn::GetAZs" : {
+          "Ref" : "AWS::Region"
+        }
+      }]
+    },
+        "VpcId": {
+          "Ref": "vpc4210b627"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Private Subnet 1"
+          },
+          {
+            "Key": "ResourceGroup",
+            "Value": "CloudFormationResource"
+          },
+          {
+            "Key": "LabName",
+            "Value": "827"
+          },
+          {
+            "Key": "CustomerName",
+            "Value": "aws"
+          }
+        ]
+      }
+    },
+    "subnet01e15276": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.1.10.0/24",
+        "AvailabilityZone" : {
+      "Fn::Select" : ["1", {
+        "Fn::GetAZs" : {
+          "Ref" : "AWS::Region"
+        }
+      }]
+    },
+        "VpcId": {
+          "Ref": "vpc4210b627"
+        },
+        "Tags": [
+          {
+            "Key": "ResourceGroup",
+            "Value": "CloudFormationResource"
+          },
+          {
+            "Key": "Name",
+            "Value": "Public Subnet 1"
+          },
+          {
+            "Key": "LabName",
+            "Value": "827"
+          },
+          {
+            "Key": "CustomerName",
+            "Value": "aws"
+          }
+        ]
+      }
+    },
+    "igwa60fcbc3": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "LabName",
+            "Value": "827"
+          },
+          {
+            "Key": "CustomerName",
+            "Value": "aws"
+          }
+        ]
+      }
+    },
+    "acl7ffa501a": {
+      "Type": "AWS::EC2::NetworkAcl",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpc4210b627"
+        },
+        "Tags": [
+          {
+            "Key": "LabName",
+            "Value": "827"
+          },
+          {
+            "Key": "ResourceGroup",
+            "Value": "CloudFormationResource"
+          },
+          {
+            "Key": "Network",
+            "Value": "Private"
+          },
+          {
+            "Key": "CustomerName",
+            "Value": "aws"
+          }
+        ]
+      }
+    },
+    "acl76fa5013": {
+      "Type": "AWS::EC2::NetworkAcl",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpc4210b627"
+        }
+      }
+    },
+    "rtb2165d144": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpc4210b627"
+        },
+        "Tags": [
+          {
+            "Key": "LabName",
+            "Value": "827"
+          },
+          {
+            "Key": "CustomerName",
+            "Value": "aws"
+          },
+          {
+            "Key": "Name",
+            "Value": "Public"
+          },
+          {
+            "Key": "ResourceGroup",
+            "Value": "CloudFormationResource"
+          }
+        ]
+      }
+    },
+    "rtb2665d143": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpc4210b627"
+        },
+        "Tags": [
+          {
+            "Key": "CustomerName",
+            "Value": "aws"
+          },
+          {
+            "Key": "ResourceGroup",
+            "Value": "CloudFormationResource"
+          },
+          {
+            "Key": "LabName",
+            "Value": "827"
+          },
+          {
+            "Key": "Name",
+            "Value": "Private"
+          }
+        ]
+      }
+    },
+    "rtb5965d13c": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpc4210b627"
+        }
+      }
+    },
+    "instancei8c17e57e": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "DisableApiTermination": "false",
+        "InstanceInitiatedShutdownBehavior": "stop",
+        "ImageId" : {
+          "Fn::FindInMap" : [
+            "AmazonLinuxAMI", {
+              "Ref" : "AWS::Region"
+            },
+            "AMI"
+          ]
+        },
+        "InstanceType": "t2.micro",
+        "KeyName" : {
+          "Ref" : "BastionKeyName"
+        },
+        "Monitoring": "false",
+        "Tags": [
+          {
+            "Key": "LabName",
+            "Value": "827"
+          },
+          {
+            "Key": "Name",
+            "Value": "BastionServer"
+          },
+          {
+            "Key": "CustomerName",
+            "Value": "aws"
+          },
+          {
+            "Key": "ResourceGroup",
+            "Value": "CloudFormationResource"
+          }
+        ],
+        "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "DeviceIndex": 0,
+            "SubnetId": {
+              "Ref": "subnet02e15275"
+            },
+            "PrivateIpAddresses": [
+              {
+                "PrivateIpAddress": "10.1.50.122",
+                "Primary": "true"
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "sgqlstack2labinstance28452991b40bb160224252a730b7804a2d127dBastionServerSecurityGroup18K9UGUH1N4OY"
+              }
+            ],
+            "AssociatePublicIpAddress": "true"
+          }
+        ]
+      }
+    },
+    "instancei4917e5bb": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "DisableApiTermination": "false",
+        "InstanceInitiatedShutdownBehavior": "stop",
+        "ImageId": "ami-4985b048",
+        "InstanceType": "t2.small",
+        "Monitoring": "false",
+        "Tags": [
+          {
+            "Key": "CustomerName",
+            "Value": "aws"
+          },
+          {
+            "Key": "Name",
+            "Value": "NAT"
+          },
+          {
+            "Key": "ResourceGroup",
+            "Value": "CloudFormationResource"
+          },
+          {
+            "Key": "LabName",
+            "Value": "827"
+          }
+        ],
+        "UserData" : {
+    "Fn::Base64" : {
+      "Fn::Join" : [
+        "\n",
+        [
+          "#!/bin/bash",
+          "yum -y update",
+          "echo 1 > /proc/sys/net/ipv4/ip_forward",
+          "echo 0 > /proc/sys/net/ipv4/conf/eth0/send_redirects",
+          "/sbin/iptables -t nat -A POSTROUTING -o eth0 -s 0.0.0.0/0 -j MASQUERADE",
+          "/sbin/iptables-save > /etc/sysconfig/iptables",
+          "mkdir -p /etc/sysctl.d/",
+          "cat <<EOF > /etc/sysctl.d/nat.conf",
+          "net.ipv4.ip_forward = 1",
+          "net.ipv4.conf.eth0.send_redirects = 0", 
+          "EOF \n"
+        ]
+      ]
+    }
+  },
+        "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "DeviceIndex": 0,
+            "SubnetId": {
+              "Ref": "subnet01e15276"
+            },
+            "PrivateIpAddresses": [
+              {
+                "PrivateIpAddress": "10.1.10.36",
+                "Primary": "true"
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "sgqlstack2labinstance28452991b40bb160224252a730b7804a2d127dNATSecurityGroup1HOIN4P5PXUO8"
+              }
+            ],
+            "AssociatePublicIpAddress": "true"
+          }
+        ]
+      }
+    },
+    "sgqlstack2labinstance28452991b40bb160224252a730b7804a2d127dBastionServerSecurityGroup18K9UGUH1N4OY": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Security Group for bastion server",
+        "VpcId": {
+          "Ref": "vpc4210b627"
+        },
+        "Tags": [
+          {
+            "Key": "LabName",
+            "Value": "827"
+          },
+          {
+            "Key": "ResourceGroup",
+            "Value": "CloudFormationResource"
+          },
+          {
+            "Key": "Name",
+            "Value": "BastionServerSecurityGroup"
+          },
+          {
+            "Key": "CustomerName",
+            "Value": "aws"
+          }
+        ]
+      }
+    },
+    "sgqlstack2labinstance28452991b40bb160224252a730b7804a2d127dNATSecurityGroup1HOIN4P5PXUO8": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Enable internal access to the NAT device",
+        "VpcId": {
+          "Ref": "vpc4210b627"
+        },
+        "Tags": [
+          {
+            "Key": "CustomerName",
+            "Value": "aws"
+          },
+          {
+            "Key": "LabName",
+            "Value": "827"
+          }
+        ]
+      }
+    },
+    "acl3": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "0.0.0.0/0",
+        "Egress": "true",
+        "Protocol": "-1",
+        "RuleAction": "allow",
+        "RuleNumber": "100",
+        "NetworkAclId": {
+          "Ref": "acl76fa5013"
+        }
+      }
+    },
+    "acl4": {
+      "Type": "AWS::EC2::NetworkAclEntry",
+      "Properties": {
+        "CidrBlock": "0.0.0.0/0",
+        "Protocol": "-1",
+        "RuleAction": "allow",
+        "RuleNumber": "100",
+        "NetworkAclId": {
+          "Ref": "acl76fa5013"
+        }
+      }
+    },
+    "subnetacl3": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "acl76fa5013"
+        },
+        "SubnetId": {
+          "Ref": "subnet02e15275"
+        }
+      }
+    },
+    "subnetacl4": {
+      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
+      "Properties": {
+        "NetworkAclId": {
+          "Ref": "acl76fa5013"
+        },
+        "SubnetId": {
+          "Ref": "subnet01e15276"
+        }
+      }
+    },
+    "gw2": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpc4210b627"
+        },
+        "InternetGatewayId": {
+          "Ref": "igwa60fcbc3"
+        }
+      }
+    },
+    "subnetroute4": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtb2165d144"
+        },
+        "SubnetId": {
+          "Ref": "subnet01e15276"
+        }
+      }
+    },
+    "subnetroute5": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "rtb2665d143"
+        },
+        "SubnetId": {
+          "Ref": "subnet02e15275"
+        }
+      }
+    },
+    "route3": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "RouteTableId": {
+          "Ref": "rtb2165d144"
+        },
+        "GatewayId": {
+          "Ref": "igwa60fcbc3"
+        }
+      },
+      "DependsOn": "gw2"
+    },
+    "route4": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "RouteTableId": {
+          "Ref": "rtb2665d143"
+        },
+        "InstanceId": {
+          "Ref": "instancei4917e5bb"
+        }
+      }
+    },
+    "dchpassoc2": {
+      "Type": "AWS::EC2::VPCDHCPOptionsAssociation",
+      "Properties": {
+        "VpcId": {
+          "Ref": "vpc4210b627"
+        },
+        "DhcpOptionsId": "dopt-5d5d543f"
+      }
+    },
+    "ingress4": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgqlstack2labinstance28452991b40bb160224252a730b7804a2d127dBastionServerSecurityGroup18K9UGUH1N4OY"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "ingress5": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgqlstack2labinstance28452991b40bb160224252a730b7804a2d127dNATSecurityGroup1HOIN4P5PXUO8"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "0",
+        "ToPort": "1024",
+        "CidrIp": "10.1.50.0/24"
+      }
+    },
+    "ingress6": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgqlstack2labinstance28452991b40bb160224252a730b7804a2d127dNATSecurityGroup1HOIN4P5PXUO8"
+        },
+        "IpProtocol": "udp",
+        "FromPort": "0",
+        "ToPort": "1024",
+        "CidrIp": "10.1.50.0/24"
+      }
+    },
+    "egress4": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgqlstack2labinstance28452991b40bb160224252a730b7804a2d127dBastionServerSecurityGroup18K9UGUH1N4OY"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "egress5": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgqlstack2labinstance28452991b40bb160224252a730b7804a2d127dNATSecurityGroup1HOIN4P5PXUO8"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "0",
+        "ToPort": "65535",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "egress6": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgqlstack2labinstance28452991b40bb160224252a730b7804a2d127dNATSecurityGroup1HOIN4P5PXUO8"
+        },
+        "IpProtocol": "udp",
+        "FromPort": "0",
+        "ToPort": "65535",
+        "CidrIp": "0.0.0.0/0"
+      }
+    }
+  },
+  "Description": ""
+}
